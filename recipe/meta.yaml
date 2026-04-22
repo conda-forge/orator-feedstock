@@ -6,23 +6,23 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: 6fe7830c40f20e77929b80b741a3b9f2145634b5f411176ecad0e761fef26f55
 
 build:
   noarch: python
-  number: 0
+  number: 1
   script: "{{ PYTHON }} -m pip install . -vv"
   entry_points:
     - orator = orator.commands.application:application.run
 
 requirements:
   host:
-    - python =2.7|>=3.5,<3.7  # should be =2.7|>=3.5,<4 but backpack/pyaml clashes.
+    - python {{ python_min }}  # should be =2.7|>=3.5,<4 but backpack/pyaml clashes.
     - pip
     - poetry >=0.12a3
   run:
-    - python =2.7|>=3.5,<3.7
+    - python >={{ python_min }},<3.7
     - backpack >=0.1,<0.2
     - blinker >=1.4,<2.0
     - cleo >=0.6,<0.7
@@ -41,6 +41,8 @@ requirements:
     - mysqlclient >=1.3,<2.0
 
 test:
+  requires:
+    - python {{ python_min }}
   imports:
     - orator
     - orator.commands
